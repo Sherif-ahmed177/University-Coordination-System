@@ -1,0 +1,57 @@
+@model UniversityApplicationSystem.Models.ViewModels.SchoolViewModel
+
+@{
+    ViewData["Title"] = "School Details";
+}
+
+<h2>School Details</h2>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.SchoolName)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.SchoolName)</dd>
+        
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.Email)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.Email)</dd>
+        
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.Description)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.Description)</dd>
+    </dl>
+</div>
+
+@if (Model.School?.Majors != null && Model.School.Majors.Any())
+{
+    <h3>Majors</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var major in Model.School.Majors)
+            {
+                <tr>
+                    <td>@major.Name</td>
+                    <td>@major.Description</td>
+                    <td>
+                        <a asp-controller="Major" asp-action="Edit" asp-route-id="@major.MajorID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-controller="Major" asp-action="Details" asp-route-id="@major.MajorID" class="btn btn-info btn-sm">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No majors found for this school.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.School!.SchoolID" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div> 

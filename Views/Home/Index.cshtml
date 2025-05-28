@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "University Application System";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>University Application Management System</p>
+    
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Students</h5>
+                    <p class="card-text">Manage student records</p>
+                    <a asp-controller="Student" asp-action="Index" class="btn btn-primary">Go to Students</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Schools</h5>
+                    <p class="card-text">Manage school information</p>
+                    <a asp-controller="School" asp-action="Index" class="btn btn-primary">Go to Schools</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Applications</h5>
+                    <p class="card-text">View and process applications</p>
+                    <a asp-controller="Application" asp-action="Index" class="btn btn-primary">Go to Applications</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

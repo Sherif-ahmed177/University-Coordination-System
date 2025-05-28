@@ -1,0 +1,68 @@
+@model UniversityApplicationSystem.Models.Student
+
+@{
+    ViewData["Title"] = "Student Details";
+}
+
+<h2>Student Details</h2>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">ID</dt>
+        <dd class="col-sm-10">@Model.StudentID</dd>
+        
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.FirstName @Model.LastName</dd>
+        
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+        
+        <dt class="col-sm-2">Date of Birth</dt>
+        <dd class="col-sm-10">@Model.DateOfBirth.ToShortDateString()</dd>
+        
+        <dt class="col-sm-2">Gender</dt>
+        <dd class="col-sm-10">@Model.Gender</dd>
+        
+        <dt class="col-sm-2">National ID</dt>
+        <dd class="col-sm-10">@Model.NationalID</dd>
+        
+        <dt class="col-sm-2">School</dt>
+        <dd class="col-sm-10">@(Model.School?.SchoolName ?? "N/A")</dd>
+    </dl>
+</div>
+
+@if (Model.Applications != null && Model.Applications.Any())
+{
+    <h3>Applications</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Major</th>
+                <th>Application Date</th>
+                <th>Status</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model.Applications)
+            {
+                <tr>
+                    <td>@application.Major?.Name</td>
+                    <td>@application.ApplicationDate.ToShortDateString()</td>
+                    <td>@application.Status</td>
+                    <td>@(application.Grade?.ToString() ?? "N/A")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No applications found for this student.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.StudentID" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

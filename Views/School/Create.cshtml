@@ -1,0 +1,42 @@
+@model UniversityApplicationSystem.Models.ViewModels.SchoolViewModel
+
+@{
+    ViewData["Title"] = "Create School";
+}
+
+<h2>Create School</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="School!.SchoolName" class="control-label"></label>
+                <input asp-for="School!.SchoolName" class="form-control" />
+                <span asp-validation-for="School!.SchoolName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="School!.Email" class="control-label"></label>
+                <input asp-for="School!.Email" class="form-control" />
+                <span asp-validation-for="School!.Email" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="School!.Description" class="control-label"></label>
+                <textarea asp-for="School!.Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="School!.Description" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
