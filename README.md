@@ -37,7 +37,6 @@ The **University Coordination System** is developed using **ASP.NET Core MVC** t
 - **Frontend**:
   - [Bootstrap](https://getbootstrap.com/) for responsive UI
   - [jQuery](https://jquery.com/) for interactivity
-  - [DataTables](https://datatables.net/) for dynamic table features
 - **Authentication**: ASP.NET Core Identity
 
 ## 📁 Project Structure
@@ -64,8 +63,8 @@ University-Coordination-System/
 ## 🚀 Getting Started
 
 ### ✅ Prerequisites
-- .NET 6.0 SDK or later
-- SQL Server
+- .NET 9.0 SDK or later
+- my SQL
 - Visual Studio 2022 / Visual Studio Code
 
 ### 🧩 Installation Steps
