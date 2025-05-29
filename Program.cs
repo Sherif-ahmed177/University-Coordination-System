@@ -21,6 +21,7 @@ namespace UniversityCoordinationSystem
             builder.Services.AddScoped<MajorService>();
             builder.Services.AddScoped<ApplicationService>();
             builder.Services.AddScoped<ReportService>();
+            builder.Services.AddScoped<PaymentService>();
 
             var app = builder.Build();
 

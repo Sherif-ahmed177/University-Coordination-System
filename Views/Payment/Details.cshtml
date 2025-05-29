@@ -1,0 +1,108 @@
+@model UniversityApplicationSystem.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="container-fluid">
+    <h2>Payment Details</h2>
+    <hr />
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Payment Information</h5>
+            <dl class="row">
+                <dt class="col-sm-3">Payment ID</dt>
+                <dd class="col-sm-9">@Model.PaymentID</dd>
+
+                <dt class="col-sm-3">Application ID</dt>
+                <dd class="col-sm-9">@Model.ApplicationID</dd>
+
+                <dt class="col-sm-3">Amount</dt>
+                <dd class="col-sm-9">@Model.Amount.ToString("C")</dd>
+
+                <dt class="col-sm-3">Payment Date</dt>
+                <dd class="col-sm-9">@Model.PaymentDate.ToString("g")</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.Status switch {
+                        "Completed" => "bg-success",
+                        "Pending" => "bg-warning",
+                        "Failed" => "bg-danger",
+                        "Refunded" => "bg-info",
+                        _ => "bg-secondary"
+                    })">
+                        @Model.Status
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Transaction ID</dt>
+                <dd class="col-sm-9">@(Model.TransactionID ?? "N/A")</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Application Information</h5>
+            @if (Model.Application != null)
+            {
+                <dl class="row">
+                    <dt class="col-sm-3">Student</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Application.Student != null)
+                        {
+                            <text>@Model.Application.Student.FirstName @Model.Application.Student.LastName</text>
+                        }
+                        else
+                        {
+                            <text>Unknown</text>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-3">Major</dt>
+                    <dd class="col-sm-9">
+                        @(Model.Application.Major?.Name ?? "Unknown")
+                    </dd>
+
+                    <dt class="col-sm-3">Application Date</dt>
+                    <dd class="col-sm-9">@Model.Application.ApplicationDate.ToString("g")</dd>
+
+                    <dt class="col-sm-3">Application Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge @(Model.Application.Status switch {
+                            "Approved" => "bg-success",
+                            "Pending" => "bg-warning",
+                            "Rejected" => "bg-danger",
+                            _ => "bg-secondary"
+                        })">
+                            @Model.Application.Status
+                        </span>
+                    </dd>
+                </dl>
+            }
+            else
+            {
+                <p class="text-muted">No application information available.</p>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.PaymentID" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div> 

@@ -7,7 +7,7 @@
     <p>University Application Management System</p>
     
     <div class="row mt-5">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Students</h5>
@@ -17,7 +17,7 @@
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Schools</h5>
@@ -27,12 +27,42 @@
             </div>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Majors</h5>
+                    <p class="card-text">Manage major programs</p>
+                    <a asp-controller="Major" asp-action="Index" class="btn btn-primary">Go to Majors</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Applications</h5>
                     <p class="card-text">View and process applications</p>
                     <a asp-controller="Application" asp-action="Index" class="btn btn-primary">Go to Applications</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Payments</h5>
+                    <p class="card-text">Manage application payments</p>
+                    <a asp-controller="Payment" asp-action="Index" class="btn btn-primary">Go to Payments</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reports</h5>
+                    <p class="card-text">Generate comprehensive reports on applications, enrollments, and payments.</p>
+                    <a asp-controller="Report" asp-action="Index" class="btn btn-primary">View Reports</a>
                 </div>
             </div>
         </div>

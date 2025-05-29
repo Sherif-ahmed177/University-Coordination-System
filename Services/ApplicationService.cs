@@ -15,7 +15,14 @@ namespace UniversityApplicationSystem.Services
 
         public Application? GetApplication(int id)
         {
-            string query = "SELECT * FROM Application WHERE ApplicationID = @ID";
+            string query = @"
+                SELECT a.*, s.*, m.*, sc.*
+                FROM Application a
+                LEFT JOIN Student s ON a.StudentID = s.StudentID
+                LEFT JOIN Major m ON a.MajorID = m.MajorID
+                LEFT JOIN School sc ON m.SchoolID = sc.SchoolID
+                WHERE a.ApplicationID = @ID";
+            
             var parameters = new[] { new MySqlParameter("@ID", id) };
             var result = _dbService.ExecuteQuery(query, parameters);
             return result.ToApplications().FirstOrDefault();
@@ -24,10 +31,11 @@ namespace UniversityApplicationSystem.Services
         public Application? GetApplicationWithDetails(int id)
         {
             string query = @"
-                SELECT a.*, s.*, m.*, p.* 
+                SELECT a.*, s.*, m.*, sc.*, p.* 
                 FROM Application a
-                JOIN Student s ON a.StudentID = s.StudentID
-                JOIN Major m ON a.MajorID = m.MajorID
+                LEFT JOIN Student s ON a.StudentID = s.StudentID
+                LEFT JOIN Major m ON a.MajorID = m.MajorID
+                LEFT JOIN School sc ON m.SchoolID = sc.SchoolID
                 LEFT JOIN Payment p ON a.ApplicationID = p.ApplicationID
                 WHERE a.ApplicationID = @ID";
             
@@ -39,13 +47,14 @@ namespace UniversityApplicationSystem.Services
             {
                 application.Student = result.ToStudents().FirstOrDefault() ?? new Student
                 {
-                    StudentID = application.StudentID,
+                    StudentID = application.StudentID ?? 0,
                     FirstName = "Unknown",
                     LastName = "Student",
                     Email = "unknown@student.com",
                     DateOfBirth = DateTime.Now,
                     Gender = "Unknown",
                     NationalID = "Unknown",
+                    SchoolID = null,
                     School = new School
                     {
                         SchoolID = 0,
@@ -59,7 +68,7 @@ namespace UniversityApplicationSystem.Services
                 };
                 application.Major = result.ToMajors().FirstOrDefault() ?? new Major
                 {
-                    MajorID = application.MajorID,
+                    MajorID = application.MajorID ?? 0,
                     Name = "Unknown",
                     Description = "Major not found",
                     SchoolID = 0,
@@ -88,49 +97,54 @@ namespace UniversityApplicationSystem.Services
 
         public IEnumerable<Application> GetAllApplications()
         {
-            string query = "SELECT * FROM Application";
+            string query = @"
+                SELECT a.*, s.*, m.*, sc.*
+                FROM Application a
+                LEFT JOIN Student s ON a.StudentID = s.StudentID
+                LEFT JOIN Major m ON a.MajorID = m.MajorID
+                LEFT JOIN School sc ON m.SchoolID = sc.SchoolID";
+            
             var result = _dbService.ExecuteQuery(query);
             return result.ToApplications();
         }
 
         public int CreateApplication(Application application)
         {
-            string query = @"INSERT INTO Application (StudentID, MajorID, ApplicationDate, Status, Grade, Notes) 
-                           VALUES (@StudentID, @MajorID, @ApplicationDate, @Status, @Grade, @Notes)";
+            string query = @"INSERT INTO Application (StudentID, MajorID, ApplicationDate, Status, Grade) 
+                           VALUES (@StudentID, @MajorID, @ApplicationDate, @Status, @Grade);
+                           SELECT LAST_INSERT_ID();";
             
             var parameters = new[]
             {
-                new MySqlParameter("@StudentID", application.StudentID),
-                new MySqlParameter("@MajorID", application.MajorID),
+                new MySqlParameter("@StudentID", application.StudentID ?? (object)DBNull.Value),
+                new MySqlParameter("@MajorID", application.MajorID ?? (object)DBNull.Value),
                 new MySqlParameter("@ApplicationDate", application.ApplicationDate),
                 new MySqlParameter("@Status", application.Status),
-                new MySqlParameter("@Grade", application.Grade ?? (object)DBNull.Value),
-                new MySqlParameter("@Notes", application.Notes ?? (object)DBNull.Value)
+                new MySqlParameter("@Grade", application.Grade ?? (object)DBNull.Value)
             };
 
-            return _dbService.ExecuteNonQuery(query, parameters);
+            var result = _dbService.ExecuteScalar(query, parameters);
+            return result != null ? Convert.ToInt32(result) : 0;
         }
 
         public void UpdateApplication(Application application)
         {
             string query = @"UPDATE Application 
-                           SET StudentID = @StudentID, 
-                               MajorID = @MajorID, 
-                               ApplicationDate = @ApplicationDate, 
-                               Status = @Status, 
-                               Grade = @Grade, 
-                               Notes = @Notes 
+                           SET StudentID = @StudentID,
+                               MajorID = @MajorID,
+                               ApplicationDate = @ApplicationDate,
+                               Status = @Status,
+                               Grade = @Grade
                            WHERE ApplicationID = @ID";
             
             var parameters = new[]
             {
                 new MySqlParameter("@ID", application.ApplicationID),
-                new MySqlParameter("@StudentID", application.StudentID),
-                new MySqlParameter("@MajorID", application.MajorID),
+                new MySqlParameter("@StudentID", application.StudentID ?? (object)DBNull.Value),
+                new MySqlParameter("@MajorID", application.MajorID ?? (object)DBNull.Value),
                 new MySqlParameter("@ApplicationDate", application.ApplicationDate),
                 new MySqlParameter("@Status", application.Status),
-                new MySqlParameter("@Grade", application.Grade ?? (object)DBNull.Value),
-                new MySqlParameter("@Notes", application.Notes ?? (object)DBNull.Value)
+                new MySqlParameter("@Grade", application.Grade ?? (object)DBNull.Value)
             };
 
             _dbService.ExecuteNonQuery(query, parameters);
@@ -139,15 +153,13 @@ namespace UniversityApplicationSystem.Services
         public void UpdateApplicationStatus(int id, string status, string changedBy)
         {
             string query = @"UPDATE Application 
-                           SET Status = @Status, 
-                               Notes = CONCAT(COALESCE(Notes, ''), '\nStatus changed to ', @Status, ' by ', @ChangedBy, ' on ', NOW()) 
+                           SET Status = @Status
                            WHERE ApplicationID = @ID";
             
             var parameters = new[]
             {
                 new MySqlParameter("@ID", id),
-                new MySqlParameter("@Status", status),
-                new MySqlParameter("@ChangedBy", changedBy)
+                new MySqlParameter("@Status", status)
             };
 
             _dbService.ExecuteNonQuery(query, parameters);

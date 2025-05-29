@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using UniversityApplicationSystem.Models;
 using UniversityApplicationSystem.Models.ViewModels;
 using UniversityApplicationSystem.Services;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace UniversityApplicationSystem.Controllers
 {
@@ -9,20 +11,19 @@ namespace UniversityApplicationSystem.Controllers
     {
         private readonly SchoolService _schoolService;
         private readonly MajorService _majorService;
+        private readonly ILogger<SchoolController> _logger;
 
-        public SchoolController(SchoolService schoolService, MajorService majorService)
+        public SchoolController(SchoolService schoolService, MajorService majorService, ILogger<SchoolController> logger)
         {
             _schoolService = schoolService;
             _majorService = majorService;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            var viewModel = new SchoolViewModel
-            {
-                Schools = _schoolService.GetAllSchools()
-            };
-            return View(viewModel);
+            var schools = _schoolService.GetAllSchools();
+            return View(schools);
         }
 
         public IActionResult Details(int id)
@@ -32,51 +33,77 @@ namespace UniversityApplicationSystem.Controllers
             {
                 return NotFound();
             }
-
-            var viewModel = new SchoolViewModel
-            {
-                School = school,
-                Majors = school.Majors
-            };
-            return View(viewModel);
+            return View(school);
         }
 
         public IActionResult Create()
         {
-            var viewModel = new SchoolViewModel
+            var school = new School
             {
-                School = new School
-                {
-                    SchoolName = string.Empty,
-                    Email = string.Empty,
-                    Description = string.Empty,
-                    Majors = new List<Major>(),
-                    Students = new List<Student>()
-                }
+                SchoolName = string.Empty,
+                Email = string.Empty,
+                Description = string.Empty,
+                TotalScales = null,
+                MinRequiredGrade = null,
+                EstablishedYear = null,
+                Majors = new List<Major>(),
+                Students = new List<Student>()
             };
-            return View(viewModel);
+            return View(school);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(SchoolViewModel viewModel)
+        public IActionResult Create(School school)
         {
+            _logger.LogInformation("Create action started with model state: {IsValid}", ModelState.IsValid);
+            
+            if (school == null)
+            {
+                _logger.LogWarning("School data is null in Create action");
+                ModelState.AddModelError("", "School data is required");
+                return View(school);
+            }
+
+            _logger.LogInformation("School data received: Name={Name}, Email={Email}, Description={Description}, TotalScales={TotalScales}, MinRequiredGrade={MinRequiredGrade}, EstablishedYear={EstablishedYear}",
+                school.SchoolName,
+                school.Email,
+                school.Description,
+                school.TotalScales,
+                school.MinRequiredGrade,
+                school.EstablishedYear);
+
             if (ModelState.IsValid)
             {
-                if (viewModel.School == null)
+                try
                 {
-                    ModelState.AddModelError("", "School data is required");
-                    return View(viewModel);
+                    // Ensure required collections are initialized
+                    school.Majors ??= new List<Major>();
+                    school.Students ??= new List<Student>();
+
+                    _logger.LogInformation("Attempting to add school with data: {SchoolData}", 
+                        JsonSerializer.Serialize(school));
+
+                    var result = _schoolService.AddSchool(school);
+                    _logger.LogInformation("School added successfully with ID: {Result}", result);
+                    TempData["SuccessMessage"] = "School created successfully.";
+                    return RedirectToAction(nameof(Index));
                 }
-
-                // Ensure required collections are initialized
-                viewModel.School.Majors ??= new List<Major>();
-                viewModel.School.Students ??= new List<Student>();
-
-                _schoolService.AddSchool(viewModel.School);
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while creating school: {ErrorMessage}", ex.Message);
+                    ModelState.AddModelError("", "An error occurred while creating the school: " + ex.Message);
+                }
             }
-            return View(viewModel);
+            else
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                _logger.LogWarning("Model state is invalid. Errors: {Errors}", string.Join(", ", errors));
+            }
+
+            return View(school);
         }
 
         public IActionResult Edit(int id)
@@ -86,39 +113,34 @@ namespace UniversityApplicationSystem.Controllers
             {
                 return NotFound();
             }
-
-            var viewModel = new SchoolViewModel
-            {
-                School = school
-            };
-            return View(viewModel);
+            return View(school);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, SchoolViewModel viewModel)
+        public IActionResult Edit(int id, School school)
         {
-            if (id != viewModel.School?.SchoolID)
+            if (id != school.SchoolID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                if (viewModel.School == null)
+                if (school == null)
                 {
                     ModelState.AddModelError("", "School data is required");
-                    return View(viewModel);
+                    return View(school);
                 }
 
                 // Ensure required collections are initialized
-                viewModel.School.Majors ??= new List<Major>();
-                viewModel.School.Students ??= new List<Student>();
+                school.Majors ??= new List<Major>();
+                school.Students ??= new List<Student>();
 
-                _schoolService.UpdateSchool(viewModel.School);
+                _schoolService.UpdateSchool(school);
                 return RedirectToAction(nameof(Index));
             }
-            return View(viewModel);
+            return View(school);
         }
 
         public IActionResult Delete(int id)
@@ -142,6 +164,58 @@ namespace UniversityApplicationSystem.Controllers
         {
             _schoolService.DeleteSchool(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: School/AddMajor/5
+        public IActionResult AddMajor(int id)
+        {
+            var school = _schoolService.GetSchool(id);
+            if (school == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new MajorViewModel
+            {
+                SchoolID = id,
+                SchoolName = school.SchoolName
+            };
+            return View(viewModel);
+        }
+
+        // POST: School/AddMajor/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddMajor(int id, MajorViewModel viewModel)
+        {
+            if (id != viewModel.SchoolID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var school = _schoolService.GetSchool(id);
+                if (school == null)
+                {
+                    return NotFound();
+                }
+
+                var major = new Major
+                {
+                    Name = viewModel.Name,
+                    Description = viewModel.Description,
+                    SchoolID = viewModel.SchoolID,
+                    Capacity = viewModel.Capacity,
+                    DurationYears = viewModel.DurationYears,
+                    School = school,
+                    Applications = new List<Application>()
+                };
+
+                _majorService.AddMajor(major);
+                return RedirectToAction(nameof(Details), new { id = viewModel.SchoolID });
+            }
+            return View(viewModel);
         }
     }
 }

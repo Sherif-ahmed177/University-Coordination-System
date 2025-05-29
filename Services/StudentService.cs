@@ -28,47 +28,41 @@ namespace UniversityApplicationSystem.Services
 
         public Student? GetStudentWithDetails(int id)
         {
-            _logger.LogInformation("Getting student details for ID: {ID}", id);
-
-            // First get the student with their school
-            string query = @"
+            // First get the student with school details
+            string studentQuery = @"
                 SELECT s.*, sc.*
                 FROM Student s
                 LEFT JOIN School sc ON s.SchoolID = sc.SchoolID
                 WHERE s.StudentID = @ID";
             
             var parameters = new[] { new MySqlParameter("@ID", id) };
-            var result = _dbService.ExecuteQuery(query, parameters);
-            
-            var student = result.ToStudents().FirstOrDefault();
-            if (student == null)
+            var studentResult = _dbService.ExecuteQuery(studentQuery, parameters);
+            var student = studentResult.ToStudents().FirstOrDefault();
+
+            if (student != null)
             {
-                _logger.LogWarning("Student not found with ID: {ID}", id);
-                return null;
+                // Then get the applications with major and school details
+                string applicationsQuery = @"
+                    SELECT a.*, m.*, s.*, sc.*
+                    FROM Application a
+                    LEFT JOIN Major m ON a.MajorID = m.MajorID
+                    LEFT JOIN Student s ON a.StudentID = s.StudentID
+                    LEFT JOIN School sc ON m.SchoolID = sc.SchoolID
+                    WHERE a.StudentID = @ID";
+                
+                var applicationsResult = _dbService.ExecuteQuery(applicationsQuery, parameters);
+                student.Applications = applicationsResult.ToApplications().ToList();
             }
 
-            // Get the student's applications with major and school details
-            string applicationsQuery = @"
-                SELECT 
-                    a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, 
-                    a.Status, a.Grade,
-                    m.Name, m.Description, m.SchoolID,
-                    s.SchoolName, s.Email, s.Description as SchoolDescription
-                FROM Application a
-                LEFT JOIN Major m ON a.MajorID = m.MajorID
-                LEFT JOIN School s ON m.SchoolID = s.SchoolID
-                WHERE a.StudentID = @ID";
-            
-            var applicationsResult = _dbService.ExecuteQuery(applicationsQuery, parameters);
-            student.Applications = applicationsResult.ToApplications().ToList();
-
-            _logger.LogInformation("Successfully loaded student details for ID: {ID}", id);
             return student;
         }
 
         public IEnumerable<Student> GetAllStudents()
         {
-            string query = "SELECT * FROM Student";
+            string query = @"
+                SELECT s.*, sc.*
+                FROM Student s
+                LEFT JOIN School sc ON s.SchoolID = sc.SchoolID";
             var result = _dbService.ExecuteQuery(query);
             return result.ToStudents();
         }

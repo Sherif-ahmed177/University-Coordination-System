@@ -5,7 +5,7 @@ namespace UniversityApplicationSystem.Models.ViewModels
 {
     public class StudentViewModel
     {
-        public Student? Student { get; set; }
+        public Student Student { get; set; } = new();
         public IEnumerable<School>? Schools { get; set; }
     }
 }

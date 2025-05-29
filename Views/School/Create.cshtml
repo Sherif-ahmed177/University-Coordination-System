@@ -1,39 +1,59 @@
-@model UniversityApplicationSystem.Models.ViewModels.SchoolViewModel
+@model UniversityApplicationSystem.Models.School
 
 @{
     ViewData["Title"] = "Create School";
 }
 
-<h2>Create School</h2>
+<div class="container-fluid">
+    <h2>Create New School</h2>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="School!.SchoolName" class="control-label"></label>
-                <input asp-for="School!.SchoolName" class="form-control" />
-                <span asp-validation-for="School!.SchoolName" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="School!.Email" class="control-label"></label>
-                <input asp-for="School!.Email" class="form-control" />
-                <span asp-validation-for="School!.Email" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="School!.Description" class="control-label"></label>
-                <textarea asp-for="School!.Description" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="School!.Description" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="SchoolName" class="control-label"></label>
+                    <input asp-for="SchoolName" class="form-control" />
+                    <span asp-validation-for="SchoolName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TotalScales" class="control-label"></label>
+                    <input asp-for="TotalScales" class="form-control" type="number" />
+                    <span asp-validation-for="TotalScales" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MinRequiredGrade" class="control-label"></label>
+                    <input asp-for="MinRequiredGrade" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="MinRequiredGrade" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EstablishedYear" class="control-label"></label>
+                    <input asp-for="EstablishedYear" class="form-control" type="number" />
+                    <span asp-validation-for="EstablishedYear" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

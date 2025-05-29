@@ -1,57 +1,120 @@
-@model UniversityApplicationSystem.Models.ViewModels.SchoolViewModel
+@model UniversityApplicationSystem.Models.School
 
 @{
     ViewData["Title"] = "School Details";
 }
 
-<h2>School Details</h2>
+<div class="container-fluid">
+    <h2>School Details</h2>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.SchoolName)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.SchoolName)</dd>
-        
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.Email)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.Email)</dd>
-        
-        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.School!.Description)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.School!.Description)</dd>
-    </dl>
-</div>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
-@if (Model.School?.Majors != null && Model.School.Majors.Any())
-{
-    <h3>Majors</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var major in Model.School.Majors)
-            {
-                <tr>
-                    <td>@major.Name</td>
-                    <td>@major.Description</td>
-                    <td>
-                        <a asp-controller="Major" asp-action="Edit" asp-route-id="@major.MajorID" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-controller="Major" asp-action="Details" asp-route-id="@major.MajorID" class="btn btn-info btn-sm">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No majors found for this school.</p>
-}
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">School ID</dt>
+                <dd class="col-sm-9">@Model.SchoolID</dd>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.School!.SchoolID" class="btn btn-warning">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">@Model.SchoolName</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Total Scales</dt>
+                <dd class="col-sm-9">@Model.TotalScales</dd>
+
+                <dt class="col-sm-3">Min Required Grade</dt>
+                <dd class="col-sm-9">@Model.MinRequiredGrade</dd>
+
+                <dt class="col-sm-3">Established Year</dt>
+                <dd class="col-sm-9">@Model.EstablishedYear</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h3>Majors</h3>
+        @if (Model.Majors != null && Model.Majors.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Major ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Capacity</th>
+                            <th>Duration (Years)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var major in Model.Majors)
+                        {
+                            <tr>
+                                <td>@major.MajorID</td>
+                                <td>@major.Name</td>
+                                <td>@(major.Description?.Length > 50 ? major.Description.Substring(0, 47) + "..." : major.Description)</td>
+                                <td>@major.Capacity</td>
+                                <td>@major.DurationYears</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No majors found.</p>
+        }
+    </div>
+
+    <div class="mt-4">
+        <h3>Students</h3>
+        @if (Model.Students != null && Model.Students.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in Model.Students)
+                        {
+                            <tr>
+                                <td>@student.StudentID</td>
+                                <td>@student.FirstName @student.LastName</td>
+                                <td>@student.Email</td>
+                                <td>@student.DateOfBirth.ToShortDateString()</td>
+                                <td>@student.Gender</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No students found.</p>
+        }
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.SchoolID" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
 </div> 

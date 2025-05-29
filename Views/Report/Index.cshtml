@@ -1,93 +1,47 @@
 @model UniversityApplicationSystem.Models.ViewModels.ReportViewModel
 
 @{
-    ViewData["Title"] = "Applications Report";
+    ViewData["Title"] = "Generate Reports";
 }
 
 <div class="container mt-4">
-    <h2>Applications Report</h2>
+    <h2>Generate Reports</h2>
+    <hr />
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <form asp-action="Generate" method="post" class="row g-3">
-                <div class="col-md-3">
-                    <label asp-for="SelectedSchoolId" class="form-label">School</label>
-                    <select asp-for="SelectedSchoolId" class="form-select" asp-items="@(new SelectList(Model.Schools, "SchoolID", "SchoolName"))">
-                        <option value="">All Schools</option>
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="GenerateReport" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ReportType" class="control-label">Report Type</label>
+                    <select asp-for="ReportType" class="form-select" asp-items="@(new SelectList(Model.ReportTypes))">
+                        <option value="">-- Select Report Type --</option>
                     </select>
+                    <span asp-validation-for="ReportType" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-3">
-                    <label asp-for="SelectedStatus" class="form-label">Status</label>
-                    <select asp-for="SelectedStatus" class="form-select" asp-items="@(new SelectList(Model.Statuses))">
-                        <option value="">All Statuses</option>
-                    </select>
+                <div class="form-group mb-3">
+                    <label asp-for="StartDate" class="control-label">Start Date</label>
+                    <input asp-for="StartDate" class="form-control" type="date" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-3">
-                    <label asp-for="StartDate" class="form-label">Start Date</label>
-                    <input asp-for="StartDate" type="date" class="form-control" />
+                <div class="form-group mb-3">
+                    <label asp-for="EndDate" class="control-label">End Date</label>
+                    <input asp-for="EndDate" class="form-control" type="date" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-3">
-                    <label asp-for="EndDate" class="form-label">End Date</label>
-                    <input asp-for="EndDate" type="date" class="form-control" />
-                </div>
-
-                <div class="col-12">
+                <div class="form-group">
                     <button type="submit" class="btn btn-primary">Generate Report</button>
-                    <a asp-action="Export" asp-route-schoolId="@Model.SelectedSchoolId" 
-                       asp-route-status="@Model.SelectedStatus" 
-                       asp-route-startDate="@Model.StartDate" 
-                       asp-route-endDate="@Model.EndDate" 
-                       class="btn btn-success">Export to CSV</a>
+                    <a asp-action="Index" class="btn btn-secondary">Reset</a>
                 </div>
             </form>
         </div>
     </div>
-
-    @if (Model.ReportData != null && Model.ReportData.Rows.Count > 0)
-    {
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        @foreach (System.Data.DataColumn column in Model.ReportData.Columns)
-                        {
-                            <th>@column.ColumnName</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (System.Data.DataRow row in Model.ReportData.Rows)
-                    {
-                        <tr>
-                            @foreach (var item in row.ItemArray)
-                            {
-                                <td>@(item?.ToString() ?? "-")</td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-info">
-            No data available for the selected criteria.
-        </div>
-    }
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            // Initialize date pickers if needed
-            $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true
-            });
-        });
-    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 } 
