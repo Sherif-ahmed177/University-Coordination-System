@@ -10,71 +10,75 @@
         <a asp-action="Create" class="btn btn-primary">Create New</a>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student</th>
+                    <th>Major</th>
+                    <th>Application Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Application.ApplicationID</td>
+                        <td>@($"{item.Application.Student?.FirstName} {item.Application.Student?.LastName}")</td>
+                        <td>@item.Application.Major?.Name</td>
+                        <td>@item.Application.ApplicationDate.ToString("g")</td>
+                        <td>
+                            <span class="badge @(item.Application.Status switch {
+                                "Accepted" => "bg-success",
+                                "Pending" => "bg-warning",
+                                "Rejected" => "bg-danger",
+                                _ => "bg-secondary"
+                            })">
+                                @item.Application.Status
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.Application.ApplicationID" class="btn btn-info btn-sm">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Application.ApplicationID" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal@(item.Application.ApplicationID)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Student</th>
-                            <th>Major</th>
-                            <th>School</th>
-                            <th>Status</th>
-                            <th>Grade</th>
-                            <th>Application Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@($"{item.Application?.Student?.FirstName} {item.Application?.Student?.LastName}")</td>
-                                <td>@item.Application?.Major?.Name</td>
-                                <td>@item.Application?.Major?.School?.SchoolName</td>
-                                <td>
-                                    <span class="badge @(item.Application?.Status switch {
-                                        "Approved" => "bg-success",
-                                        "Rejected" => "bg-danger",
-                                        "Waitlisted" => "bg-warning",
-                                        _ => "bg-secondary"
-                                    })">
-                                        @item.Application?.Status
-                                    </span>
-                                </td>
-                                <td>@item.Application?.Grade</td>
-                                <td>@item.Application?.ApplicationDate.ToString("g")</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a asp-action="Details" asp-route-id="@item.Application?.ApplicationID" class="btn btn-info btn-sm">Details</a>
-                                        <a asp-action="Edit" asp-route-id="@item.Application?.ApplicationID" class="btn btn-primary btn-sm">Edit</a>
-                                        <form asp-action="Delete" asp-route-id="@item.Application?.ApplicationID" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this application?');">Delete</button>
-                                        </form>
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal@(item.Application.ApplicationID)" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Confirm Delete</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this application?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form asp-action="Delete" asp-route-id="@item.Application.ApplicationID" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 

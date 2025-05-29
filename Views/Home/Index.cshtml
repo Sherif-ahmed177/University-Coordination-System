@@ -1,70 +1,150 @@
 @{
-    ViewData["Title"] = "University Application System";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>University Application Management System</p>
-    
-    <div class="row mt-5">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Students</h5>
-                    <p class="card-text">Manage student records</p>
-                    <a asp-controller="Student" asp-action="Index" class="btn btn-primary">Go to Students</a>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body p-5 text-center">
+                    <h1 class="display-4 mb-3">Welcome to University Application System</h1>
+                    <p class="lead">Streamline your university application process with our comprehensive management system.</p>
                 </div>
             </div>
         </div>
-        
+    </div>
+
+    <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Schools</h5>
-                    <p class="card-text">Manage school information</p>
-                    <a asp-controller="School" asp-action="Index" class="btn btn-primary">Go to Schools</a>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-graduate"></i>
                 </div>
+                <div class="stat-value">@ViewBag.StudentCount</div>
+                <div class="stat-label">Total Students</div>
             </div>
         </div>
-        
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Majors</h5>
-                    <p class="card-text">Manage major programs</p>
-                    <a asp-controller="Major" asp-action="Index" class="btn btn-primary">Go to Majors</a>
+            <div class="stat-card" style="background: linear-gradient(45deg, #198754, #146c43);">
+                <div class="stat-icon">
+                    <i class="fas fa-school"></i>
                 </div>
+                <div class="stat-value">@ViewBag.SchoolCount</div>
+                <div class="stat-label">Schools</div>
             </div>
         </div>
-        
         <div class="col-md-3">
-            <div class="card">
+            <div class="stat-card" style="background: linear-gradient(45deg, #0dcaf0, #0aa2c0);">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-value">@ViewBag.MajorCount</div>
+                <div class="stat-label">Majors</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card" style="background: linear-gradient(45deg, #ffc107, #cc9a06);">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-value">@ViewBag.ApplicationCount</div>
+                <div class="stat-label">Applications</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-user-graduate me-2"></i>Students</h5>
+                    <a asp-controller="Student" asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i> Add Student
+                    </a>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Applications</h5>
-                    <p class="card-text">View and process applications</p>
-                    <a asp-controller="Application" asp-action="Index" class="btn btn-primary">Go to Applications</a>
+                    <p class="card-text">Manage student information, track applications, and monitor academic progress.</p>
+                    <a asp-controller="Student" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i> View Students
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mt-4">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-school me-2"></i>Schools</h5>
+                    <a asp-controller="School" asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i> Add School
+                    </a>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Payments</h5>
-                    <p class="card-text">Manage application payments</p>
-                    <a asp-controller="Payment" asp-action="Index" class="btn btn-primary">Go to Payments</a>
+                    <p class="card-text">Browse schools, view available majors, and manage school information.</p>
+                    <a asp-controller="School" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i> View Schools
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3 mt-4">
-            <div class="card">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-book me-2"></i>Majors</h5>
+                    <a asp-controller="School" asp-action="AddMajor" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i> Add Major
+                    </a>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Reports</h5>
-                    <p class="card-text">Generate comprehensive reports on applications, enrollments, and payments.</p>
-                    <a asp-controller="Report" asp-action="Index" class="btn btn-primary">View Reports</a>
+                    <p class="card-text">Manage academic majors, set capacity limits, and track enrollment statistics.</p>
+                    <a asp-controller="School" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i> View Majors
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-file-alt me-2"></i>Applications</h5>
+                    <a asp-controller="Application" asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i> New Application
+                    </a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Track application status, manage submissions, and process student applications.</p>
+                    <a asp-controller="Application" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i> View Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Reports</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Generate comprehensive reports on applications, enrollments, and system statistics.</p>
+                    <a asp-controller="Report" asp-action="Index" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-right me-1"></i> View Reports
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .stat-card {
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+}
