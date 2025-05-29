@@ -1,0 +1,63 @@
+@model UniversityApplicationSystem.Models.School
+
+@{
+    ViewData["Title"] = "Edit School";
+}
+
+<div class="container-fluid">
+    <h2>Edit School</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="SchoolID" />
+
+                <div class="form-group">
+                    <label asp-for="SchoolName" class="control-label"></label>
+                    <input asp-for="SchoolName" class="form-control" />
+                    <span asp-validation-for="SchoolName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TotalScales" class="control-label"></label>
+                    <input asp-for="TotalScales" class="form-control" type="number" />
+                    <span asp-validation-for="TotalScales" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MinRequiredGrade" class="control-label"></label>
+                    <input asp-for="MinRequiredGrade" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="MinRequiredGrade" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EstablishedYear" class="control-label"></label>
+                    <input asp-for="EstablishedYear" class="form-control" type="number" />
+                    <span asp-validation-for="EstablishedYear" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

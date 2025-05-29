@@ -1,0 +1,59 @@
+@model UniversityApplicationSystem.Models.Major
+
+@{
+    ViewData["Title"] = "Edit Major";
+}
+
+<div class="container-fluid">
+    <h2>Edit Major</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="MajorID" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="SchoolID" class="control-label">School</label>
+                    <select asp-for="SchoolID" class="form-control" asp-items="ViewBag.Schools">
+                        <option value="">Select School</option>
+                    </select>
+                    <span asp-validation-for="SchoolID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Capacity" class="control-label"></label>
+                    <input asp-for="Capacity" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="DurationYears" class="control-label">Duration (Years)</label>
+                    <input asp-for="DurationYears" class="form-control" type="number" min="1" max="6" />
+                    <span asp-validation-for="DurationYears" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
