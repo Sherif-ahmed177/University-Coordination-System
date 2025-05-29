@@ -6,63 +6,59 @@
 }
 
 <div class="container mt-4">
-    <h2>Create Application</h2>
-
-    <div class="row">
-        <div class="col-md-8">
-            <form asp-action="Create" method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">Create Application</h2>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Application.StudentID" class="control-label">Student</label>
-                    <select asp-for="Application.StudentID" class="form-select" required>
+                <div class="mb-3">
+                    <label asp-for="Application.StudentID" class="form-label">Student</label>
+                    <select asp-for="Application.StudentID" class="form-select" asp-items="ViewBag.StudentID">
                         <option value="">-- Select Student --</option>
-                        @if (Model.Students != null)
-                        {
-                            @foreach (var student in Model.Students)
-                            {
-                                <option value="@student.StudentID">@($"{student.FirstName} {student.LastName}")</option>
-                            }
-                        }
                     </select>
                     <span asp-validation-for="Application.StudentID" class="text-danger"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Application.MajorID" class="control-label">Major</label>
-                    <select asp-for="Application.MajorID" class="form-select" required>
+                <div class="mb-3">
+                    <label asp-for="Application.MajorID" class="form-label">Major</label>
+                    <select asp-for="Application.MajorID" class="form-select" asp-items="ViewBag.MajorID">
                         <option value="">-- Select Major --</option>
-                        @if (Model.Majors != null)
-                        {
-                            @foreach (var major in Model.Majors)
-                            {
-                                <option value="@major.MajorID">@major.Name</option>
-                            }
-                        }
                     </select>
                     <span asp-validation-for="Application.MajorID" class="text-danger"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Application.Status" class="control-label">Status</label>
-                    <select asp-for="Application.Status" class="form-select" required>
+                <div class="mb-3">
+                    <label asp-for="Application.Status" class="form-label">Status</label>
+                    <select asp-for="Application.Status" class="form-select">
                         <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
+                        <option value="Accepted">Accepted</option>
                         <option value="Rejected">Rejected</option>
-                        <option value="Waitlisted">Waitlisted</option>
                     </select>
                     <span asp-validation-for="Application.Status" class="text-danger"></span>
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Application.Grade" class="control-label">Grade</label>
-                    <input asp-for="Application.Grade" class="form-control" type="number" step="0.01" min="0" max="100" />
+                <div class="mb-3">
+                    <label asp-for="Application.Grade" class="form-label">Grade</label>
+                    <input asp-for="Application.Grade" class="form-control" />
                     <span asp-validation-for="Application.Grade" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <div class="mb-3">
+                    <label asp-for="Application.ApplicationDate" class="form-label">Application Date</label>
+                    <input asp-for="Application.ApplicationDate" class="form-control" type="datetime-local" />
+                    <span asp-validation-for="Application.ApplicationDate" class="text-danger"></span>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
                 </div>
             </form>
         </div>

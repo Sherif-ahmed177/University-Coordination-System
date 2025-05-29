@@ -213,6 +213,7 @@ namespace UniversityApplicationSystem.Controllers
                 };
 
                 _majorService.AddMajor(major);
+                TempData["SuccessMessage"] = $"Major '{viewModel.Name}' has been added successfully to {school.SchoolName}.";
                 return RedirectToAction(nameof(Details), new { id = viewModel.SchoolID });
             }
             return View(viewModel);
