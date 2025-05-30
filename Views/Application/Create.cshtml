@@ -16,16 +16,30 @@
 
                 <div class="mb-3">
                     <label asp-for="Application.StudentID" class="form-label">Student</label>
-                    <select asp-for="Application.StudentID" class="form-select" asp-items="ViewBag.StudentID">
+                    <select asp-for="Application.StudentID" class="form-select">
                         <option value="">-- Select Student --</option>
+                        @if (Model.Students != null)
+                        {
+                            @foreach (var student in Model.Students)
+                            {
+                                <option value="@student.StudentID">@student.FirstName @student.LastName</option>
+                            }
+                        }
                     </select>
                     <span asp-validation-for="Application.StudentID" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Application.MajorID" class="form-label">Major</label>
-                    <select asp-for="Application.MajorID" class="form-select" asp-items="ViewBag.MajorID">
+                    <select asp-for="Application.MajorID" class="form-select">
                         <option value="">-- Select Major --</option>
+                        @if (Model.Majors != null)
+                        {
+                            @foreach (var major in Model.Majors)
+                            {
+                                <option value="@major.MajorID">@major.Name</option>
+                            }
+                        }
                     </select>
                     <span asp-validation-for="Application.MajorID" class="text-danger"></span>
                 </div>
@@ -34,7 +48,7 @@
                     <label asp-for="Application.Status" class="form-label">Status</label>
                     <select asp-for="Application.Status" class="form-select">
                         <option value="Pending">Pending</option>
-                        <option value="Accepted">Accepted</option>
+                        <option value="Approved">Approved</option>
                         <option value="Rejected">Rejected</option>
                     </select>
                     <span asp-validation-for="Application.Status" class="text-danger"></span>
