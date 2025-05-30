@@ -83,11 +83,15 @@ namespace UniversityApplicationSystem.Controllers
                 }
             };
 
+            var students = _studentService.GetAllStudents();
+            var majors = _majorService.GetAllMajors();
+            _logger.LogInformation($"[DEBUG] Students count: {students.Count()} | Majors count: {majors.Count()}");
+
             var viewModel = new ApplicationViewModel
             {
                 Application = application,
-                Students = _studentService.GetAllStudents(),
-                Majors = _majorService.GetAllMajors()
+                Students = students,
+                Majors = majors
             };
             return View(viewModel);
         }
