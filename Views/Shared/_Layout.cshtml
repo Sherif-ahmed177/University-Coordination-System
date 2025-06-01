@@ -1,61 +1,66 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - University Application System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/design-system.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/UniversityCoordinationSystem.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: var(--primary-700);">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
                     <i class="fas fa-university me-2"></i>
                     <span>University Application System</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
                                 <i class="fas fa-home me-1"></i> Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Student" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Student" ? "active" : "")" asp-controller="Student" asp-action="Index">
                                 <i class="fas fa-user-graduate me-1"></i> Students
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="School" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "School" ? "active" : "")" asp-controller="School" asp-action="Index">
                                 <i class="fas fa-school me-1"></i> Schools
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Major" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Major" ? "active" : "")" asp-controller="Major" asp-action="Index">
                                 <i class="fas fa-book me-1"></i> Majors
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Application" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Application" ? "active" : "")" asp-controller="Application" asp-action="Index">
                                 <i class="fas fa-file-alt me-1"></i> Applications
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Payment" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Payment" ? "active" : "")" asp-controller="Payment" asp-action="Index">
                                 <i class="fas fa-credit-card me-1"></i> Payments
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Report" asp-action="Index">
+                            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")" asp-controller="Report" asp-action="Index">
                                 <i class="fas fa-chart-bar me-1"></i> Reports
                             </a>
                         </li>
@@ -97,19 +102,11 @@
         </div>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 - University Application System</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-decoration-none me-3"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-decoration-none me-3"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-decoration-none me-3"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="text-decoration-none"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
+    <footer class="footer mt-auto py-2" style="background-color: var(--neutral-100);">
+        <div class="container text-center">
+            <p class="mb-0">&copy;
+                <script>document.write(new Date().getFullYear())</script> - University Application System
+            </p>
         </div>
     </footer>
 
@@ -118,4 +115,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
