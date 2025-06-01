@@ -50,10 +50,14 @@
                         <td>@item.DurationYears</td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a asp-action="Edit" asp-route-id="@item.MajorID" class="btn btn-warning btn-sm">Edit</a>
-                                <a asp-action="Details" asp-route-id="@item.MajorID" class="btn btn-info btn-sm">Details</a>
+                                <a asp-action="Details" asp-route-id="@item.MajorID" class="btn btn-info btn-sm">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.MajorID" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('@item.MajorID', '@item.Name')">
-                                    Delete
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </td>
@@ -99,4 +103,4 @@
             $('#deleteModal').modal('show');
         }
     </script>
-} 
+}
