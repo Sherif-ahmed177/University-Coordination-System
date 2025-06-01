@@ -176,15 +176,13 @@ namespace UniversityApplicationSystem.Services
         public void UpdatePaymentStatus(int id, string status, string transactionId = null)
         {
             string query = @"UPDATE Payment 
-                           SET Status = @Status,
-                               TransactionID = @TransactionID
+                           SET Status = @Status
                            WHERE PaymentID = @ID";
             
             var parameters = new[]
             {
                 new MySqlParameter("@ID", id),
-                new MySqlParameter("@Status", status),
-                new MySqlParameter("@TransactionID", transactionId ?? (object)DBNull.Value)
+                new MySqlParameter("@Status", status)
             };
 
             _dbService.ExecuteNonQuery(query, parameters);
