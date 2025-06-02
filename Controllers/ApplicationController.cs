@@ -12,6 +12,7 @@ namespace UniversityApplicationSystem.Controllers
         private readonly StudentService _studentService;
         private readonly MajorService _majorService;
         private readonly PaymentService _paymentService;
+        private readonly SchoolService _schoolService;
         private readonly ILogger<ApplicationController> _logger;
 
         public ApplicationController(
@@ -19,12 +20,14 @@ namespace UniversityApplicationSystem.Controllers
             StudentService studentService,
             MajorService majorService,
             PaymentService paymentService,
+            SchoolService schoolService,
             ILogger<ApplicationController> logger)
         {
             _applicationService = applicationService;
             _studentService = studentService;
             _majorService = majorService;
             _paymentService = paymentService;
+            _schoolService = schoolService;
             _logger = logger;
         }
 
@@ -52,7 +55,7 @@ namespace UniversityApplicationSystem.Controllers
                     Email = "unknown@student.com",
                     DateOfBirth = DateTime.Now,
                     Gender = "Unknown",
-                    NationalID = "Unknown",
+                    NationalIDNumber = "Unknown",
                     School = new School
                     {
                         SchoolID = 0,
@@ -67,7 +70,7 @@ namespace UniversityApplicationSystem.Controllers
                 Major = new Major
                 {
                     MajorID = 0,
-                    Name = "Unknown",
+                    MajorName = "Unknown",
                     Description = "Major not found",
                     SchoolID = 0,
                     School = new School
@@ -85,13 +88,15 @@ namespace UniversityApplicationSystem.Controllers
 
             var students = _studentService.GetAllStudents();
             var majors = _majorService.GetAllMajors();
-            _logger.LogInformation($"[DEBUG] Students count: {students.Count()} | Majors count: {majors.Count()}");
+            var schools = _schoolService.GetAllSchools();
+            _logger.LogInformation($"[DEBUG] Students count: {students.Count()} | Majors count: {majors.Count()} | Schools count: {schools.Count()}");
 
             var viewModel = new ApplicationViewModel
             {
                 Application = application,
                 Students = students,
-                Majors = majors
+                Majors = majors,
+                Schools = schools
             };
             return View(viewModel);
         }
@@ -104,6 +109,29 @@ namespace UniversityApplicationSystem.Controllers
                 ModelState.AddModelError("", "Application data is required");
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                viewModel.Schools = _schoolService.GetAllSchools();
+                return View(viewModel);
+            }
+
+            // Validate grade against school's MinRequiredGrade
+            var selectedMajor = _majorService.GetMajorWithDetails(viewModel.Application.MajorID ?? 0);
+            if (selectedMajor == null || selectedMajor.School == null)
+            {
+                ModelState.AddModelError("Application.MajorID", "Selected major or its school could not be found.");
+            }
+            else if (selectedMajor.School.MinRequiredGrade.HasValue && viewModel.Application.Grade.HasValue)
+            {
+                if (viewModel.Application.Grade.Value < selectedMajor.School.MinRequiredGrade.Value)
+                {
+                    ModelState.AddModelError("Application.Grade", $"The grade is below the minimum required for this school ({selectedMajor.School.MinRequiredGrade.Value}).");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                viewModel.Students = _studentService.GetAllStudents();
+                viewModel.Majors = _majorService.GetAllMajors();
+                viewModel.Schools = _schoolService.GetAllSchools();
                 return View(viewModel);
             }
 
@@ -157,6 +185,7 @@ namespace UniversityApplicationSystem.Controllers
             // If we get here, something went wrong
             viewModel.Students = _studentService.GetAllStudents();
             viewModel.Majors = _majorService.GetAllMajors();
+            viewModel.Schools = _schoolService.GetAllSchools();
             return View(viewModel);
         }
 
@@ -171,11 +200,16 @@ namespace UniversityApplicationSystem.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
+                var students = _studentService.GetAllStudents();
+                var majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(majors, "MajorID", "MajorName");
+
                 var viewModel = new ApplicationViewModel
                 {
                     Application = application,
-                    Students = _studentService.GetAllStudents(),
-                    Majors = _majorService.GetAllMajors()
+                    Students = students,
+                    Majors = majors
                 };
 
                 return View(viewModel);
@@ -198,6 +232,8 @@ namespace UniversityApplicationSystem.Controllers
                     ModelState.AddModelError("", "Application data is required");
                     viewModel.Students = _studentService.GetAllStudents();
                     viewModel.Majors = _majorService.GetAllMajors();
+                    ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                    ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                     return View(viewModel);
                 }
 
@@ -236,6 +272,8 @@ namespace UniversityApplicationSystem.Controllers
                 // If we get here, something went wrong
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                 return View(viewModel);
             }
             catch (Exception ex)
@@ -243,6 +281,8 @@ namespace UniversityApplicationSystem.Controllers
                 TempData["ErrorMessage"] = $"Error updating application: {ex.Message}";
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                 return View(viewModel);
             }
         }

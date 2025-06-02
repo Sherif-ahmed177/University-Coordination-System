@@ -53,7 +53,7 @@ namespace UniversityApplicationSystem.Services
                     Email = "unknown@student.com",
                     DateOfBirth = DateTime.Now,
                     Gender = "Unknown",
-                    NationalID = "Unknown",
+                    NationalIDNumber = "Unknown",
                     SchoolID = null,
                     School = new School
                     {
@@ -69,7 +69,7 @@ namespace UniversityApplicationSystem.Services
                 application.Major = result.ToMajors().FirstOrDefault() ?? new Major
                 {
                     MajorID = application.MajorID ?? 0,
-                    Name = "Unknown",
+                    MajorName = "Unknown",
                     Description = "Major not found",
                     SchoolID = 0,
                     School = new School

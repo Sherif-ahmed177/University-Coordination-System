@@ -49,8 +49,8 @@ namespace UniversityApplicationSystem.Services
             string query = @"
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
-                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
-                       m.MajorID, m.Name, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
+                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalIDNumber, s.SchoolID,
+                       m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
                 LEFT JOIN Application a ON p.ApplicationID = a.ApplicationID
@@ -80,7 +80,7 @@ namespace UniversityApplicationSystem.Services
                         Email = "unknown@student.com",
                         DateOfBirth = DateTime.Now,
                         Gender = "Unknown",
-                        NationalID = "Unknown",
+                        NationalIDNumber = "Unknown",
                         School = new School
                         {
                             SchoolID = 0,
@@ -95,7 +95,7 @@ namespace UniversityApplicationSystem.Services
                     Major = new Major
                     {
                         MajorID = 0,
-                        Name = "Unknown",
+                        MajorName = "Unknown",
                         Description = "Major not found",
                         SchoolID = 0,
                         School = new School
@@ -120,8 +120,8 @@ namespace UniversityApplicationSystem.Services
             string query = @"
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
-                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
-                       m.MajorID, m.Name, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
+                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalIDNumber, s.SchoolID,
+                       m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
                 LEFT JOIN Application a ON p.ApplicationID = a.ApplicationID
@@ -135,6 +135,16 @@ namespace UniversityApplicationSystem.Services
 
         public int CreatePayment(Payment payment)
         {
+            // Validate ApplicationID references an existing application
+            var applicationExists = _dbService.ExecuteQuery("SELECT 1 FROM Application WHERE ApplicationID = @ID", new[] { new MySql.Data.MySqlClient.MySqlParameter("@ID", payment.ApplicationID) }).Rows.Count > 0;
+            if (!applicationExists)
+                throw new Exception("Application does not exist for the provided ApplicationID.");
+
+            // Prevent duplicate payments for the same application
+            var duplicate = _dbService.ExecuteQuery("SELECT 1 FROM Payment WHERE ApplicationID = @ID", new[] { new MySql.Data.MySqlClient.MySqlParameter("@ID", payment.ApplicationID) }).Rows.Count > 0;
+            if (duplicate)
+                throw new Exception("A payment for this application already exists.");
+
             string query = @"INSERT INTO Payment (ApplicationID, Amount, PaymentDate, Status, TransactionID) 
                            VALUES (@ApplicationID, @Amount, @PaymentDate, @Status, @TransactionID)";
             

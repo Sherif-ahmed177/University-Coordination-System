@@ -107,7 +107,20 @@ namespace UniversityApplicationSystem.Controllers
             {
                 try
                 {
+                    // Update the payment
                     _paymentService.UpdatePayment(payment);
+
+                    // If payment status is completed, update the related application status to Approved
+                    if (payment.Status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var application = _applicationService.GetApplication(payment.ApplicationID);
+                        if (application != null)
+                        {
+                            application.Status = "Approved";
+                            _applicationService.UpdateApplication(application);
+                        }
+                    }
+
                     TempData["Success"] = "Payment updated successfully.";
                     return RedirectToAction(nameof(Index));
                 }
@@ -144,6 +157,14 @@ namespace UniversityApplicationSystem.Controllers
             try
             {
                 _paymentService.UpdatePaymentStatus(id, status, transactionId);
+                if (status == "Completed")
+                {
+                    var payment = _paymentService.GetPayment(id);
+                    if (payment != null)
+                    {
+                        _applicationService.UpdateApplicationStatus(payment.ApplicationID, "Approved", User.Identity?.Name ?? "System");
+                    }
+                }
                 TempData["Success"] = "Payment status updated successfully.";
             }
             catch (Exception ex)
@@ -153,4 +174,4 @@ namespace UniversityApplicationSystem.Controllers
             return RedirectToAction(nameof(Details), new { id });
         }
     }
-} 
+}

@@ -28,7 +28,7 @@
                     <tr>
                         <td>@item.Application.ApplicationID</td>
                         <td>@($"{item.Application.Student?.FirstName} {item.Application.Student?.LastName}")</td>
-                        <td>@item.Application.Major?.Name</td>
+                        <td>@item.Application.Major?.MajorName</td>
                         <td>@item.Application.ApplicationDate.ToString("g")</td>
                         <td>
                             <span class="badge @(item.Application.Status switch {

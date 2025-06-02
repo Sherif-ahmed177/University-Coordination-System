@@ -25,7 +25,7 @@ namespace UniversityApplicationSystem.Models
         public string Gender { get; set; } = string.Empty;
 
         [Required]
-        public string NationalID { get; set; } = string.Empty;
+        public string NationalIDNumber { get; set; } = string.Empty;
 
         public int? SchoolID { get; set; }
 

@@ -75,8 +75,8 @@ namespace UniversityApplicationSystem.Services
                 student.Email,
                 student.SchoolID);
 
-            string query = @"INSERT INTO Student (FirstName, LastName, Email, DateOfBirth, Gender, NationalID, SchoolID) 
-                           VALUES (@FirstName, @LastName, @Email, @DateOfBirth, @Gender, @NationalID, @SchoolID)";
+            string query = @"INSERT INTO Student (FirstName, LastName, Email, DateOfBirth, Gender, NationalIDNumber, SchoolID) 
+                           VALUES (@FirstName, @LastName, @Email, @DateOfBirth, @Gender, @NationalIDNumber, @SchoolID)";
             
             var parameters = new[]
             {
@@ -85,7 +85,7 @@ namespace UniversityApplicationSystem.Services
                 new MySqlParameter("@Email", student.Email),
                 new MySqlParameter("@DateOfBirth", student.DateOfBirth),
                 new MySqlParameter("@Gender", student.Gender),
-                new MySqlParameter("@NationalID", student.NationalID),
+                new MySqlParameter("@NationalIDNumber", student.NationalIDNumber),
                 new MySqlParameter("@SchoolID", student.SchoolID ?? (object)DBNull.Value)
             };
 
@@ -110,7 +110,7 @@ namespace UniversityApplicationSystem.Services
                                Email = @Email, 
                                DateOfBirth = @DateOfBirth, 
                                Gender = @Gender, 
-                               NationalID = @NationalID, 
+                               NationalIDNumber = @NationalIDNumber, 
                                SchoolID = @SchoolID 
                            WHERE StudentID = @ID";
             
@@ -122,7 +122,7 @@ namespace UniversityApplicationSystem.Services
                 new MySqlParameter("@Email", student.Email),
                 new MySqlParameter("@DateOfBirth", student.DateOfBirth),
                 new MySqlParameter("@Gender", student.Gender),
-                new MySqlParameter("@NationalID", student.NationalID),
+                new MySqlParameter("@NationalIDNumber", student.NationalIDNumber),
                 new MySqlParameter("@SchoolID", student.SchoolID ?? (object)DBNull.Value)
             };
 

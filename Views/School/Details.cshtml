@@ -62,7 +62,7 @@
                             {
                                 <tr>
                                     <td>@major.MajorID</td>
-                                    <td>@major.Name</td>
+                                    <td>@major.MajorName</td>
                                     <td>@(major.Description?.Length > 50 ? major.Description.Substring(0, 47) + "..." : major.Description)</td>
                                     <td>@major.Capacity</td>
                                     <td>@major.DurationYears</td>
@@ -88,7 +88,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>Are you sure you want to delete the major <strong>@major.Name</strong>?</p>
+                                                        <p>Are you sure you want to delete the major <strong>@major.MajorName</strong>?</p>
                                                         <p class="text-danger">This action cannot be undone and will also delete all associated applications.</p>
                                                     </div>
                                                     <div class="modal-footer">

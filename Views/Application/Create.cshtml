@@ -30,14 +30,28 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="schoolSelect" class="form-label">School</label>
+                    <select id="schoolSelect" class="form-select">
+                        <option value="">-- Select School --</option>
+                        @if (Model.Schools != null)
+                        {
+                            foreach (var school in Model.Schools)
+                            {
+                                <option value="@school.SchoolID">@school.SchoolName</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="Application.MajorID" class="form-label">Major</label>
-                    <select asp-for="Application.MajorID" class="form-select">
+                    <select asp-for="Application.MajorID" class="form-select" id="majorSelect">
                         <option value="">-- Select Major --</option>
                         @if (Model.Majors != null)
                         {
-                            @foreach (var major in Model.Majors)
+                            foreach (var major in Model.Majors)
                             {
-                                <option value="@major.MajorID">@major.Name</option>
+                                <option value="@major.MajorID" data-school="@major.SchoolID">@major.MajorName</option>
                             }
                         }
                     </select>
@@ -83,4 +97,28 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var schoolSelect = document.getElementById('schoolSelect');
+            var majorSelect = document.getElementById('majorSelect');
+            function filterMajors() {
+                var selectedSchool = schoolSelect.value;
+                for (var i = 0; i < majorSelect.options.length; i++) {
+                    var option = majorSelect.options[i];
+                    if (!option.value) continue; // skip placeholder
+                    var schoolId = option.getAttribute('data-school');
+                    option.style.display = (!selectedSchool || schoolId === selectedSchool) ? '' : 'none';
+                }
+                // Reset major selection if it doesn't match
+                if (majorSelect.selectedIndex > 0) {
+                    var selectedOption = majorSelect.options[majorSelect.selectedIndex];
+                    if (selectedOption.style.display === 'none') {
+                        majorSelect.selectedIndex = 0;
+                    }
+                }
+            }
+            schoolSelect.addEventListener('change', filterMajors);
+            filterMajors();
+        });
+    </script>
 }

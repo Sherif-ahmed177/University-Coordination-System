@@ -45,19 +45,28 @@ namespace UniversityApplicationSystem.Services
 
         public IEnumerable<Major> GetAllMajors()
         {
-            string query = "SELECT * FROM Major";
+            string query = @"
+                SELECT m.*, s.*
+                FROM Major m
+                LEFT JOIN School s ON m.SchoolID = s.SchoolID";
             var result = _dbService.ExecuteQuery(query);
-            return result.ToMajors();
+            var majors = result.ToMajors().ToList();
+            // Ensure School property is set for each major
+            foreach (var major in majors)
+            {
+                major.School = result.ToSchools().FirstOrDefault(s => s.SchoolID == major.SchoolID);
+            }
+            return majors;
         }
 
         public int AddMajor(Major major)
         {
-            string query = @"INSERT INTO Major (Name, Description, SchoolID, Capacity, DurationYears) 
-                           VALUES (@Name, @Description, @SchoolID, @Capacity, @DurationYears)";
+            string query = @"INSERT INTO Major (MajorName, Description, SchoolID, Capacity, DurationYears) 
+                           VALUES (@MajorName, @Description, @SchoolID, @Capacity, @DurationYears)";
             
             var parameters = new[]
             {
-                new MySqlParameter("@Name", major.Name),
+                new MySqlParameter("@MajorName", major.MajorName),
                 new MySqlParameter("@Description", major.Description),
                 new MySqlParameter("@SchoolID", major.SchoolID),
                 new MySqlParameter("@Capacity", major.Capacity ?? (object)DBNull.Value),
@@ -70,7 +79,7 @@ namespace UniversityApplicationSystem.Services
         public void UpdateMajor(Major major)
         {
             string query = @"UPDATE Major 
-                           SET Name = @Name,
+                           SET MajorName = @MajorName,
                                Description = @Description,
                                SchoolID = @SchoolID,
                                Capacity = @Capacity,
@@ -80,7 +89,7 @@ namespace UniversityApplicationSystem.Services
             var parameters = new[]
             {
                 new MySqlParameter("@ID", major.MajorID),
-                new MySqlParameter("@Name", major.Name),
+                new MySqlParameter("@MajorName", major.MajorName),
                 new MySqlParameter("@Description", major.Description),
                 new MySqlParameter("@SchoolID", major.SchoolID),
                 new MySqlParameter("@Capacity", major.Capacity ?? (object)DBNull.Value),
