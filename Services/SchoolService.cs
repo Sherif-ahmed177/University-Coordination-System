@@ -137,6 +137,11 @@ namespace UniversityApplicationSystem.Services
                 _logger.LogInformation("School added successfully with ID: {Result}", result);
                 return result;
             }
+            catch (MySqlException ex)
+            {
+                _logger.LogError(ex, "Database validation error while adding school: {ErrorMessage}", ex.Message);
+                throw new Exception($"Database validation error: {ex.Message}", ex);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while adding school: {ErrorMessage}", ex.Message);
@@ -166,7 +171,15 @@ namespace UniversityApplicationSystem.Services
                 new MySqlParameter("@Description", school.Description)
             };
 
-            _dbService.ExecuteNonQuery(query, parameters);
+            try
+            {
+                _dbService.ExecuteNonQuery(query, parameters);
+            }
+            catch (MySqlException ex)
+            {
+                _logger.LogError(ex, "Database validation error while updating school: {ErrorMessage}", ex.Message);
+                throw new Exception($"Database validation error: {ex.Message}", ex);
+            }
         }
 
         public void DeleteSchool(int id)

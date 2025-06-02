@@ -137,9 +137,20 @@ namespace UniversityApplicationSystem.Controllers
                 school.Majors ??= new List<Major>();
                 school.Students ??= new List<Student>();
 
-                _schoolService.UpdateSchool(school);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _schoolService.UpdateSchool(school);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while updating school: {ErrorMessage}", ex.Message);
+                    ModelState.AddModelError("", ex.Message);
+                }
             }
+            // Ensure required collections are initialized before returning the view
+            school.Majors ??= new List<Major>();
+            school.Students ??= new List<Student>();
             return View(school);
         }
 
