@@ -200,11 +200,16 @@ namespace UniversityApplicationSystem.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
+                var students = _studentService.GetAllStudents();
+                var majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(majors, "MajorID", "MajorName");
+
                 var viewModel = new ApplicationViewModel
                 {
                     Application = application,
-                    Students = _studentService.GetAllStudents(),
-                    Majors = _majorService.GetAllMajors()
+                    Students = students,
+                    Majors = majors
                 };
 
                 return View(viewModel);
@@ -227,6 +232,8 @@ namespace UniversityApplicationSystem.Controllers
                     ModelState.AddModelError("", "Application data is required");
                     viewModel.Students = _studentService.GetAllStudents();
                     viewModel.Majors = _majorService.GetAllMajors();
+                    ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                    ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                     return View(viewModel);
                 }
 
@@ -265,6 +272,8 @@ namespace UniversityApplicationSystem.Controllers
                 // If we get here, something went wrong
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                 return View(viewModel);
             }
             catch (Exception ex)
@@ -272,6 +281,8 @@ namespace UniversityApplicationSystem.Controllers
                 TempData["ErrorMessage"] = $"Error updating application: {ex.Message}";
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                ViewBag.StudentID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Students, "StudentID", "FirstName");
+                ViewBag.MajorID = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(viewModel.Majors, "MajorID", "MajorName");
                 return View(viewModel);
             }
         }
