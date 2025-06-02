@@ -3,6 +3,9 @@ using UniversityApplicationSystem.Models;
 using UniversityApplicationSystem.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace UniversityApplicationSystem.Controllers
 {
@@ -51,6 +54,23 @@ namespace UniversityApplicationSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Major major)
         {
+            var school = _schoolService.GetSchool(major.SchoolID);
+            if (school == null)
+            {
+                ModelState.AddModelError("SchoolID", "Selected school does not exist");
+            }
+            else if (school.TotalScales.HasValue && major.Capacity.HasValue)
+            {
+                // Get all existing majors for this school
+                var allMajors = _majorService.GetAllMajors().Where(m => m.SchoolID == major.SchoolID && m.Capacity.HasValue);
+                int currentTotal = allMajors.Sum(m => m.Capacity.Value);
+                int newTotal = currentTotal + major.Capacity.Value;
+                if (newTotal > school.TotalScales.Value)
+                {
+                    ModelState.AddModelError("Capacity", $"The total capacity of all majors for this school (including this one: {newTotal}) cannot exceed the school's total scales ({school.TotalScales.Value}).");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -65,7 +85,6 @@ namespace UniversityApplicationSystem.Controllers
             }
 
             // Get the school for the dropdown
-            var school = _schoolService.GetSchool(major.SchoolID);
             ViewBag.Schools = new SelectList(_schoolService.GetAllSchools(), "SchoolID", "SchoolName", major.SchoolID);
             return View(major);
         }
