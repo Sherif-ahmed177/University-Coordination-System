@@ -45,9 +45,18 @@ namespace UniversityApplicationSystem.Services
 
         public IEnumerable<Major> GetAllMajors()
         {
-            string query = "SELECT * FROM Major";
+            string query = @"
+                SELECT m.*, s.*
+                FROM Major m
+                LEFT JOIN School s ON m.SchoolID = s.SchoolID";
             var result = _dbService.ExecuteQuery(query);
-            return result.ToMajors();
+            var majors = result.ToMajors().ToList();
+            // Ensure School property is set for each major
+            foreach (var major in majors)
+            {
+                major.School = result.ToSchools().FirstOrDefault(s => s.SchoolID == major.SchoolID);
+            }
+            return majors;
         }
 
         public int AddMajor(Major major)
