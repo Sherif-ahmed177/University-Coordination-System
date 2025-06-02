@@ -49,7 +49,7 @@ namespace UniversityApplicationSystem.Services
             string query = @"
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
-                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
+                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalIDNumber, s.SchoolID,
                        m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
@@ -120,7 +120,7 @@ namespace UniversityApplicationSystem.Services
             string query = @"
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
-                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
+                       s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalIDNumber, s.SchoolID,
                        m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
