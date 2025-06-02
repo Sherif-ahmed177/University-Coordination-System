@@ -107,6 +107,27 @@ namespace UniversityApplicationSystem.Controllers
                 return View(viewModel);
             }
 
+            // Validate grade against school's MinRequiredGrade
+            var selectedMajor = _majorService.GetMajorWithDetails(viewModel.Application.MajorID ?? 0);
+            if (selectedMajor == null || selectedMajor.School == null)
+            {
+                ModelState.AddModelError("Application.MajorID", "Selected major or its school could not be found.");
+            }
+            else if (selectedMajor.School.MinRequiredGrade.HasValue && viewModel.Application.Grade.HasValue)
+            {
+                if (viewModel.Application.Grade.Value < selectedMajor.School.MinRequiredGrade.Value)
+                {
+                    ModelState.AddModelError("Application.Grade", $"The grade is below the minimum required for this school ({selectedMajor.School.MinRequiredGrade.Value}).");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                viewModel.Students = _studentService.GetAllStudents();
+                viewModel.Majors = _majorService.GetAllMajors();
+                return View(viewModel);
+            }
+
             try
             {
                 // Set default values
