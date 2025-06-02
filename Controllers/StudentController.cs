@@ -36,7 +36,7 @@ namespace UniversityApplicationSystem.Controllers
                     LastName = string.Empty,
                     Email = string.Empty,
                     Gender = string.Empty,
-                    NationalID = string.Empty,
+                    NationalIDNumber = string.Empty,
                     DateOfBirth = DateTime.Now.AddYears(-18) // Default to 18 years ago
                 },
                 Schools = _schoolService.GetAllSchools()
@@ -76,7 +76,7 @@ namespace UniversityApplicationSystem.Controllers
                         Email = viewModel.Student.Email,
                         DateOfBirth = viewModel.Student.DateOfBirth,
                         Gender = viewModel.Student.Gender,
-                        NationalID = viewModel.Student.NationalID,
+                        NationalIDNumber = viewModel.Student.NationalIDNumber,
                         SchoolID = viewModel.Student.SchoolID
                     };
 

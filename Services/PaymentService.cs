@@ -50,7 +50,7 @@ namespace UniversityApplicationSystem.Services
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
                        s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
-                       m.MajorID, m.Name, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
+                       m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
                 LEFT JOIN Application a ON p.ApplicationID = a.ApplicationID
@@ -80,7 +80,7 @@ namespace UniversityApplicationSystem.Services
                         Email = "unknown@student.com",
                         DateOfBirth = DateTime.Now,
                         Gender = "Unknown",
-                        NationalID = "Unknown",
+                        NationalIDNumber = "Unknown",
                         School = new School
                         {
                             SchoolID = 0,
@@ -95,7 +95,7 @@ namespace UniversityApplicationSystem.Services
                     Major = new Major
                     {
                         MajorID = 0,
-                        Name = "Unknown",
+                        MajorName = "Unknown",
                         Description = "Major not found",
                         SchoolID = 0,
                         School = new School
@@ -121,7 +121,7 @@ namespace UniversityApplicationSystem.Services
                 SELECT p.*, 
                        a.ApplicationID, a.StudentID, a.MajorID, a.ApplicationDate, a.Status, a.Grade,
                        s.StudentID, s.FirstName, s.LastName, s.Email, s.DateOfBirth, s.Gender, s.NationalID, s.SchoolID,
-                       m.MajorID, m.Name, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
+                       m.MajorID, m.MajorName, m.Description, m.SchoolID, m.Capacity, m.DurationYears,
                        sc.SchoolID, sc.SchoolName, sc.Email, sc.Description, sc.TotalScales, sc.MinRequiredGrade, sc.EstablishedYear
                 FROM Payment p
                 LEFT JOIN Application a ON p.ApplicationID = a.ApplicationID

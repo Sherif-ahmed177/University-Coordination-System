@@ -88,7 +88,7 @@ namespace UniversityApplicationSystem.Controllers
         {
             var applications = _applicationService.GetAllApplications();
             var reportData = applications
-                .GroupBy(a => a.Major?.Name ?? "Unknown")
+                .GroupBy(a => a.Major?.MajorName ?? "Unknown")
                 .Select(g => new ReportDataViewModel
                 {
                     Category = g.Key,

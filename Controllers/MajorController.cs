@@ -40,7 +40,7 @@ namespace UniversityApplicationSystem.Controllers
             ViewBag.Schools = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(_schoolService.GetAllSchools(), "SchoolID", "SchoolName");
             return View(new Major
             {
-                Name = string.Empty,
+                MajorName = string.Empty,
                 Description = string.Empty,
                 School = null,
                 Applications = new List<Application>()

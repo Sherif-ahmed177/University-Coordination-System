@@ -36,7 +36,7 @@ namespace UniversityApplicationSystem.Services
                 Email = row.Field<string>("Email"),
                 DateOfBirth = row.Field<DateTime>("DateOfBirth"),
                 Gender = row.Field<string>("Gender"),
-                NationalID = row.Field<string>("NationalID"),
+                NationalIDNumber = row.Field<string>("NationalIDNumber"),
                 SchoolID = row.Field<int?>("SchoolID"),
                 School = row.Table.Columns.Contains("SchoolName") ? new School
                 {
@@ -59,7 +59,7 @@ namespace UniversityApplicationSystem.Services
             return table.AsEnumerable().Select(row => new Major
             {
                 MajorID = row.Field<int>("MajorID"),
-                Name = row.Field<string>("Name") ?? "Unknown",
+                MajorName = row.Field<string>("MajorName") ?? "Unknown",
                 Description = row.Field<string>("Description") ?? "No description",
                 SchoolID = row.Field<int>("SchoolID"),
                 Capacity = row.IsNull("Capacity") ? null : row.Field<int>("Capacity"),
@@ -98,7 +98,7 @@ namespace UniversityApplicationSystem.Services
                     Email = row.IsNull("Email") ? "unknown@student.com" : row.Field<string>("Email"),
                     DateOfBirth = row.IsNull("DateOfBirth") ? DateTime.Now : row.Field<DateTime>("DateOfBirth"),
                     Gender = row.IsNull("Gender") ? "Unknown" : row.Field<string>("Gender"),
-                    NationalID = row.IsNull("NationalID") ? "Unknown" : row.Field<string>("NationalID"),
+                    NationalIDNumber = row.IsNull("NationalIDNumber") ? "Unknown" : row.Field<string>("NationalIDNumber"),
                     SchoolID = row.IsNull("SchoolID") ? null : row.Field<int>("SchoolID"),
                     School = row.IsNull("SchoolName") ? null : new School
                     {
@@ -117,7 +117,7 @@ namespace UniversityApplicationSystem.Services
                 Major = row.IsNull("MajorID") ? null : new Major
                 {
                     MajorID = row.IsNull("MajorID") ? 0 : row.Field<int>("MajorID"),
-                    Name = row.IsNull("Name") ? "Unknown" : row.Field<string>("Name"),
+                    MajorName = row.IsNull("MajorName") ? "Unknown" : row.Field<string>("MajorName"),
                     Description = row.IsNull("Description") ? "No description" : row.Field<string>("Description"),
                     SchoolID = row.IsNull("SchoolID") ? 0 : row.Field<int>("SchoolID"),
                     Capacity = row.IsNull("Capacity") ? null : row.Field<int>("Capacity"),
@@ -165,7 +165,7 @@ namespace UniversityApplicationSystem.Services
                         Email = row.IsNull("Email") ? "unknown@student.com" : row.Field<string>("Email"),
                         DateOfBirth = row.IsNull("DateOfBirth") ? DateTime.Now : row.Field<DateTime>("DateOfBirth"),
                         Gender = row.IsNull("Gender") ? "Unknown" : row.Field<string>("Gender"),
-                        NationalID = row.IsNull("NationalID") ? "Unknown" : row.Field<string>("NationalID"),
+                        NationalIDNumber = row.IsNull("NationalIDNumber") ? "Unknown" : row.Field<string>("NationalIDNumber"),
                         SchoolID = row.IsNull("SchoolID") ? null : row.Field<int>("SchoolID"),
                         School = row.IsNull("SchoolName") ? null : new School
                         {
@@ -184,7 +184,7 @@ namespace UniversityApplicationSystem.Services
                     Major = row.IsNull("MajorID") ? null : new Major
                     {
                         MajorID = row.IsNull("MajorID") ? 0 : row.Field<int>("MajorID"),
-                        Name = row.IsNull("Name") ? "Unknown" : row.Field<string>("Name"),
+                        MajorName = row.IsNull("MajorName") ? "Unknown" : row.Field<string>("MajorName"),
                         Description = row.IsNull("Description") ? "No description" : row.Field<string>("Description"),
                         SchoolID = row.IsNull("SchoolID") ? 0 : row.Field<int>("SchoolID"),
                         Capacity = row.IsNull("Capacity") ? null : row.Field<int>("Capacity"),

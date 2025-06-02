@@ -52,7 +52,7 @@ namespace UniversityApplicationSystem.Controllers
                     Email = "unknown@student.com",
                     DateOfBirth = DateTime.Now,
                     Gender = "Unknown",
-                    NationalID = "Unknown",
+                    NationalIDNumber = "Unknown",
                     School = new School
                     {
                         SchoolID = 0,
@@ -67,7 +67,7 @@ namespace UniversityApplicationSystem.Controllers
                 Major = new Major
                 {
                     MajorID = 0,
-                    Name = "Unknown",
+                    MajorName = "Unknown",
                     Description = "Major not found",
                     SchoolID = 0,
                     School = new School

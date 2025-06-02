@@ -93,7 +93,7 @@
                                     {
                                         var app = (ApplicationViewModel)detail;
                                         <td>@($"{app.Application.Student?.FirstName} {app.Application.Student?.LastName}")</td>
-                                        <td>@app.Application.Major?.Name</td>
+                                        <td>@app.Application.Major?.MajorName</td>
                                         <td>@app.Application.Status</td>
                                         <td>@app.Application.ApplicationDate.ToString("d")</td>
                                     }

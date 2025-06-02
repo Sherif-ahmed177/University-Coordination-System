@@ -203,7 +203,7 @@ namespace UniversityApplicationSystem.Controllers
 
                 var major = new Major
                 {
-                    Name = viewModel.Name,
+                    MajorName = viewModel.Name,
                     Description = viewModel.Description,
                     SchoolID = viewModel.SchoolID,
                     Capacity = viewModel.Capacity,

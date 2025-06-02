@@ -51,7 +51,7 @@
                                 : "Unknown")
                         </td>
                         <td>
-                            @(item.Application?.Major?.Name ?? "Unknown")
+                            @(item.Application?.Major?.MajorName ?? "Unknown")
                         </td>
                         <td>@item.Amount.ToString("C")</td>
                         <td>@item.PaymentDate.ToString("g")</td>
