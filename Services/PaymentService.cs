@@ -135,6 +135,16 @@ namespace UniversityApplicationSystem.Services
 
         public int CreatePayment(Payment payment)
         {
+            // Validate ApplicationID references an existing application
+            var applicationExists = _dbService.ExecuteQuery("SELECT 1 FROM Application WHERE ApplicationID = @ID", new[] { new MySql.Data.MySqlClient.MySqlParameter("@ID", payment.ApplicationID) }).Rows.Count > 0;
+            if (!applicationExists)
+                throw new Exception("Application does not exist for the provided ApplicationID.");
+
+            // Prevent duplicate payments for the same application
+            var duplicate = _dbService.ExecuteQuery("SELECT 1 FROM Payment WHERE ApplicationID = @ID", new[] { new MySql.Data.MySqlClient.MySqlParameter("@ID", payment.ApplicationID) }).Rows.Count > 0;
+            if (duplicate)
+                throw new Exception("A payment for this application already exists.");
+
             string query = @"INSERT INTO Payment (ApplicationID, Amount, PaymentDate, Status, TransactionID) 
                            VALUES (@ApplicationID, @Amount, @PaymentDate, @Status, @TransactionID)";
             

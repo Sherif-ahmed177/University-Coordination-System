@@ -12,6 +12,7 @@ namespace UniversityApplicationSystem.Controllers
         private readonly StudentService _studentService;
         private readonly MajorService _majorService;
         private readonly PaymentService _paymentService;
+        private readonly SchoolService _schoolService;
         private readonly ILogger<ApplicationController> _logger;
 
         public ApplicationController(
@@ -19,12 +20,14 @@ namespace UniversityApplicationSystem.Controllers
             StudentService studentService,
             MajorService majorService,
             PaymentService paymentService,
+            SchoolService schoolService,
             ILogger<ApplicationController> logger)
         {
             _applicationService = applicationService;
             _studentService = studentService;
             _majorService = majorService;
             _paymentService = paymentService;
+            _schoolService = schoolService;
             _logger = logger;
         }
 
@@ -85,13 +88,15 @@ namespace UniversityApplicationSystem.Controllers
 
             var students = _studentService.GetAllStudents();
             var majors = _majorService.GetAllMajors();
-            _logger.LogInformation($"[DEBUG] Students count: {students.Count()} | Majors count: {majors.Count()}");
+            var schools = _schoolService.GetAllSchools();
+            _logger.LogInformation($"[DEBUG] Students count: {students.Count()} | Majors count: {majors.Count()} | Schools count: {schools.Count()}");
 
             var viewModel = new ApplicationViewModel
             {
                 Application = application,
                 Students = students,
-                Majors = majors
+                Majors = majors,
+                Schools = schools
             };
             return View(viewModel);
         }
@@ -104,6 +109,7 @@ namespace UniversityApplicationSystem.Controllers
                 ModelState.AddModelError("", "Application data is required");
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                viewModel.Schools = _schoolService.GetAllSchools();
                 return View(viewModel);
             }
 
@@ -125,6 +131,7 @@ namespace UniversityApplicationSystem.Controllers
             {
                 viewModel.Students = _studentService.GetAllStudents();
                 viewModel.Majors = _majorService.GetAllMajors();
+                viewModel.Schools = _schoolService.GetAllSchools();
                 return View(viewModel);
             }
 
@@ -178,6 +185,7 @@ namespace UniversityApplicationSystem.Controllers
             // If we get here, something went wrong
             viewModel.Students = _studentService.GetAllStudents();
             viewModel.Majors = _majorService.GetAllMajors();
+            viewModel.Schools = _schoolService.GetAllSchools();
             return View(viewModel);
         }
 
