@@ -4,7 +4,7 @@ A robust web application built to manage university admissions, student applicat
 
 ## 📌 Overview
 
-The **University Coordination System** is developed using **ASP.NET Core MVC** to centralize and automate various administrative tasks related to student enrollment and academic program management across different schools within a university.
+The **University Coordination System** is developed using **ASP.NET Core MVC** to centralize and automate administrative tasks related to student enrollment and academic program management across different schools within a university.
 
 ## ✨ Features
 
@@ -33,7 +33,8 @@ The **University Coordination System** is developed using **ASP.NET Core MVC** t
 ## 🛠️ Tech Stack
 
 - **Backend Framework**: ASP.NET Core MVC (.NET 6+)
-- **Database**: SQL Server
+- **Database**: MySQL
+- **ORM**: Entity Framework Core
 - **Frontend**:
   - [Bootstrap](https://getbootstrap.com/) for responsive UI
   - [jQuery](https://jquery.com/) for interactivity
@@ -42,84 +43,129 @@ The **University Coordination System** is developed using **ASP.NET Core MVC** t
 
 ## 📁 Project Structure
 
-```
+```text
 University-Coordination-System/
-├── Controllers/         # Handles HTTP requests
-├── Models/              # Core and ViewModels
-│   └── ViewModels/      
-├── Views/               # Razor Pages (UI)
-├── Services/            # Business logic layer
-├── wwwroot/             # Static content (CSS, JS, Images)
-└── Program.cs           # Entry point
-```
+├── Controllers/
+├── Models/
+│   └── ViewModels/
+├── Services/
+├── Views/
+├── wwwroot/
+├── database/
+│   └── universityapplicationsystem.sql
+├── Program.cs
+└── README.md
+````
 
 ## 🔑 Key Entities
 
-- **School** – Represents a college/school within the university
-- **Major** – Represents an academic program
-- **Student** – Contains student details and documents
-- **Application** – Links students to majors and tracks their admission process
-- **Payment** – Manages application fees and receipts
+  - **School** – Represents a college/school within the university
+  - **Major** – Represents an academic program
+  - **Student** – Contains student details and documents
+  - **Application** – Links students to majors and tracks their admission process
+  - **Payment** – Manages application fees and receipts
 
 ## 🚀 Getting Started
 
 ### ✅ Prerequisites
-- .NET 6.0 SDK or later
-- SQL Server
-- Visual Studio 2022 / Visual Studio Code
 
-### 🧩 Installation Steps
+  - .NET 6.0 SDK or later
+  - MySQL Server 8.0+
+  - Visual Studio 2022 / VS Code
+  - MySQL Workbench (optional)
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/university-coordination-system.git
-   ```
+-----
 
-2. **Navigate to the project directory**:
-   ```bash
-   cd University-Coordination-System
-   ```
+## 🧩 Installation Steps
 
-3. **Restore dependencies**:
-   ```bash
-   dotnet restore
-   ```
+### 1️⃣ Clone the Repository
 
-4. **Configure the database**:  
-   Update the `appsettings.json` file with your SQL Server connection string.
+```bash
+git clone [https://github.com/your-username/University-Coordination-System.git](https://github.com/your-username/University-Coordination-System.git)
+cd University-Coordination-System
+```
 
-5. **Apply migrations**:
-   ```bash
-   dotnet ef database update
-   ```
+-----
 
-6. **Run the application**:
-   ```bash
-   dotnet run
-   ```
+### 2️⃣ Restore .NET Dependencies
 
-7. Open a browser and go to `http://localhost:5000` (or the specified port).
+```bash
+dotnet restore
+```
+
+-----
+
+### 3️⃣ Database Setup (MySQL)
+
+#### Create Database
+
+```sql
+CREATE DATABASE universityapplicationsystem;
+```
+
+#### Import Database
+
+Using **PowerShell**:
+
+```powershell
+Get-Content database\universityapplicationsystem.sql | mysql -u root -p universityapplicationsystem
+```
+
+Or using **MySQL Workbench**:
+
+  * Server → Data Import
+  * Import `database/universityapplicationsystem.sql`
+
+-----
+
+### 4️⃣ Configure Connection String
+
+Update `appsettings.json`:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "server=localhost;port=3306;database=universityapplicationsystem;user=root;password=YOUR_PASSWORD;"
+}
+```
+
+-----
+
+### 5️⃣ Run the Application
+
+```bash
+dotnet run
+```
+
+Open:
+
+```
+http://localhost:5000
+```
+
+-----
 
 ## 👨‍💻 Usage
 
-1. Log in with your admin or user credentials.
-2. Navigate using the top menu bar.
-3. Use available modules to manage schools, majors, student applications, and payments efficiently.
+  * Log in as admin or user
+  * Navigate through the dashboard
+  * Manage schools, majors, applications, and payments
+
+-----
 
 ## 🤝 Contributing
 
-Contributions are welcome!
+1.  Fork the repository
+2.  Create a feature branch
+3.  Commit changes
+4.  Push to your branch
+5.  Open a Pull Request
 
-1. Fork the repository  
-2. Create a feature branch (`git checkout -b feature-name`)  
-3. Commit your changes (`git commit -m "Add feature"`)  
-4. Push to your branch (`git push origin feature-name`)  
-5. Open a Pull Request  
+-----
 
 ## 📄 License
 
-Licensed under the [MIT License](LICENSE).
+Licensed under the MIT License.
 
 ## 🆘 Support
 
-For issues or feature requests, please open an issue in the GitHub repository or contact the development team directly.
+For issues or feature requests, please open an issue on GitHub.
